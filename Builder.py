@@ -15,8 +15,6 @@ class Builder:
         self.ZMin = self.Region.minz() + 1 - self.Padding[1]
         self.ZMax = self.Region.maxz() + self.Padding[4]
 
-        #print(f"Creating Cube with\nX: {self.XMin}")
-
     def BuildCube(self, block1, block2, block3):
         # First set of sides
         for x in range(self.XMin, self.XMax):

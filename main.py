@@ -29,26 +29,21 @@ print(block_list)
 
 # Create an 8x8 array of random BlockState objects using object dtype
 #random_blocks = np.empty((8, 8), dtype=object)
-random_blocks2 = np.empty((20,20), dtype=object)
-
-# Generate random indices for the block_set
-#for i in range(8):
-#    for j in range(8):
-#        random_blocks[i, j] = block_list[np.random.randint(len(block_list))]
+random_blocks = np.empty((20,20), dtype=object)
 
 for i in range(20):
     for j in range(20):
-        random_blocks2[i, j] = block_list[np.random.randint(len(block_list))]
+        random_blocks[i, j] = block_list[np.random.randint(len(block_list))]
 
 # Print the array (for visualization)
 #print(random_blocks)
 
-HeadBuilder.BuildFace(random_blocks2)
-BodyBuilder.BuildFace(random_blocks2)
-LArmBuilder.BuildFace(random_blocks2)
-RArmBuilder.BuildFace(random_blocks2)
-LLegBuilder.BuildFace(random_blocks2)
-RLegBuilder.BuildFace(random_blocks2)
+HeadBuilder.BuildFace(random_blocks)
+BodyBuilder.BuildFace(random_blocks)
+LArmBuilder.BuildFace(random_blocks)
+RArmBuilder.BuildFace(random_blocks)
+LLegBuilder.BuildFace(random_blocks)
+RLegBuilder.BuildFace(random_blocks)
 
 
 
@@ -60,6 +55,7 @@ regionDict = {"Head":Head,
               "RLeg":RLeg}
 
 Schem = Schematic(name="Head", author="PenguinLad", description="A Head", regions=regionDict)
+
 # Save the schematic
 Schem.save("planet.litematic")
 print("Finished")
