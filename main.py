@@ -22,7 +22,6 @@ RArmBuilder = Builder(RArm, Padding = [1, 0, 1, 1, 1, 1])
 LLegBuilder = Builder(LLeg, Padding = [0, 1, 1, 1, 0, 0])
 RLegBuilder = Builder(RLeg, Padding = [0, 0, 1, 1, 1, 0])
 
-
 # Create the block states we are going to use
 block1 = BlockState("minecraft:redstone_block")
 block2 = BlockState("minecraft:gold_block") 
@@ -30,6 +29,8 @@ block3 = BlockState("minecraft:diamond_block")
 block4 = BlockState("minecraft:copper_block")
 block5 = BlockState("minecraft:iron_block")
 block6 = BlockState("minecraft:coal_block")
+
+block7 = BlockState("minecraft:honey_block")
 
 # Create 6 different faces for testing
 Face1 = Face(CreatePlane(20, 20, block1))
@@ -39,7 +40,10 @@ Face4 = Face(CreatePlane(20, 20, block4))
 Face5 = Face(CreatePlane(20, 20, block5))
 Face6 = Face(CreatePlane(20, 20, block6))
 
+MaskFace = Face(CreatePlane(20, 20, block7))
+
 FaceArray = np.array([Face1, Face2, Face3, Face4, Face5, Face6], dtype = object)
+MaskArray = np.array([MaskFace, MaskFace, MaskFace, MaskFace, MaskFace, MaskFace], dtype = object)
 
 # We build the Front and Back faces (3 and 4) last such that they are the last blocks placed
 # We build the Top and Bottom faces (1 and 6) first such that edges are handled by subsequent faces
@@ -52,7 +56,12 @@ RArmBuilder.BuildCube(FaceArray, OrderArray)
 LLegBuilder.BuildCube(FaceArray, OrderArray)
 RLegBuilder.BuildCube(FaceArray, OrderArray)
 
-
+BodyBuilder.BuildMask(MaskArray, OrderArray)
+HeadBuilder.BuildMask(MaskArray, OrderArray)
+LArmBuilder.BuildMask(MaskArray, OrderArray)
+RArmBuilder.BuildMask(MaskArray, OrderArray)
+LLegBuilder.BuildMask(MaskArray, OrderArray)
+RLegBuilder.BuildMask(MaskArray, OrderArray)
 
 regionDict = {"Head":Head,
               "Body":Body,
