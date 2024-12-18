@@ -1,67 +1,50 @@
-from litemapy import Schematic, Region, BlockState
-import numpy as np
-
 class Builder:
-    def __init__(self, region, Padding):
-        self.Region = region
+    def __init__(self, Region, Padding):
+        self.Region = Region
 
-        # 1 = No Second Layer
-        self.Padding = Padding
+        self.CubeYMin = Padding[0]
+        self.CubeZMin = Padding[1]
+        self.CubeXMin = Padding[2]
+        self.CubeXMax = self.Region.maxx() - Padding[3]
+        self.CubeZMax = self.Region.maxz() - Padding[4]
+        self.CubeYMax = self.Region.maxy() - Padding[5]
 
-        self.XMin = self.Region.minx() + 1 - self.Padding[2]
-        self.XMax = self.Region.maxx() + self.Padding[3]
-        self.YMin = self.Region.miny() + 1 - self.Padding[0]
-        self.YMax = self.Region.maxy() + self.Padding[5]
-        self.ZMin = self.Region.minz() + 1 - self.Padding[1]
-        self.ZMax = self.Region.maxz() + self.Padding[4]
-
-    def BuildCube(self, block1, block2, block3):
-        # First set of sides
-        for x in range(self.XMin, self.XMax):
-            for y in range(self.YMin, self.YMax):
-                self.Region.setblock(x, y, -2, block1)
-                self.Region.setblock(x, y, 1, block1)
-
-        # Second set of sides
-        #YIndicies = [self.YMax - 2, self.YMin]
-        for x in range(self.XMin, self.XMax):
-            for z in range(self.ZMin + 1, self.ZMax - 1):
-                self.Region.setblock(x, -2, z, block2)
-                self.Region.setblock(x, 1, z, block2)
-
-        # Third set of sides
-        for y in range(self.YMin + 1, self.YMax - 1):
-            for z in range(self.ZMin + 1, self.ZMax - 1):
-                self.Region.setblock(-2, y, z, block3)
-                self.Region.setblock(1, y, z, block3)
+    def BuildCube(self, FaceArray, OrderArray):
+        # Build each face of the cube
+        for i in OrderArray:
+            Input = i - 1
+            self.BuildFace(FaceArray[Input], Input)
             
-    def BuildFace(self, Face):
-        # First set of sides
-        ZIndicies = [self.ZMax - 1, self.ZMin]
-        for x in range(self.XMin, self.XMax):
-            for y in range(self.YMin, self.YMax):
-                i = x - 1
-                j = y - 1
+    def BuildFace(self, Face, SideNum):
+        # Get the Blocks of the Face
+        Blocks = Face.BlockArray
 
-                self.Region.setblock(x, y, ZIndicies[0], Face[i][j])
-                self.Region.setblock(x, y, ZIndicies[1], Face[i][j])
+        # Determine if we are working with a top or bottom side
+        if SideNum < 3:
+            TopAxis = True
+        else:
+            TopAxis = False
 
-        # Second set of sides
-        YIndicies = [self.YMax - 1, self.YMin]
-        for x in range(self.XMin, self.XMax):
-            for z in range(self.ZMin + 1, self.ZMax - 1):
-                i = x - 1
-                j = z - 1
+        # Building Sides 1 or 6
+        if SideNum == 0 or SideNum == 5:
+            for x in range(self.CubeXMin, self.CubeXMax + 1):
+                for z in range(self.CubeZMin, self.CubeZMax + 1):
+                    YIndex = self.CubeYMax if TopAxis else self.CubeYMin
 
-                self.Region.setblock(x, YIndicies[0], z, Face[i][j])
-                self.Region.setblock(x, YIndicies[1], z, Face[i][j])
+                    self.Region.setblock(x, YIndex, z, Blocks[x - 1][z - 1])
 
-        # Third set of sides
-        XIndicies = [self.XMax - 1, self.XMin]
-        for y in range(self.YMin + 1, self.YMax - 1):
-            for z in range(self.ZMin + 1, self.ZMax - 1):
-                i = y - 1
-                j = z - 1
+        # Building Sides 2 or 5
+        elif SideNum == 1 or SideNum == 4:
+            for x in range(self.CubeXMin, self.CubeXMax + 1):
+                for y in range(self.CubeYMin, self.CubeYMax + 1):
+                    ZIndex = self.CubeZMax if TopAxis else self.CubeZMin
 
-                self.Region.setblock(XIndicies[0], y, z, Face[i][j])
-                self.Region.setblock(XIndicies[1], y, z, Face[i][j])
+                    self.Region.setblock(x, y, ZIndex, Blocks[x - 1][y - 1])
+
+        # Building Sides 3 or 4
+        elif SideNum == 2 or SideNum == 3:
+            for y in range(self.CubeYMin, self.CubeYMax + 1):
+                for z in range(self.CubeZMin, self.CubeZMax + 1):
+                    XIndex = self.CubeXMax if TopAxis else self.CubeXMin
+
+                    self.Region.setblock(XIndex, y, z, Blocks[y - 1][z - 1])
