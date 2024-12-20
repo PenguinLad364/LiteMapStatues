@@ -40,11 +40,11 @@ class Face:
             Rotations (int): Desired number of rotations to make
         '''
         
-        self.BlockAray = np.rot90(Rotations, Rotations)
+        self.BlockArray = np.rot90(self.BlockArray, Rotations)
 
     def ReflectFace(self):
         '''
         Repositions the values in BlockArray, represents a reflection 
         '''
         
-        self.BlockArray = np.flip(self.BlockAray, 0)
+        self.BlockArray = np.flip(self.BlockArray, 0)

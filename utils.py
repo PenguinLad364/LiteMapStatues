@@ -147,4 +147,3 @@ def ConvertToBlocks(RGBArray):
             BlockArray[i][j] = BlockState(f"minecraft:{Block}")
 
     return BlockArray
-

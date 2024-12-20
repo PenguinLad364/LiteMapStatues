@@ -51,6 +51,11 @@ class Builder:
         self.MaskYMax = self.CubeYMax + Padding[5]
         self.MaskZMax = self.CubeZMax + Padding[4]
 
+        print(f"Building Cube:")
+        print(f"     XMin: {self.CubeXMin}, XMax = {self.CubeXMax}")
+        print(f"     YMin: {self.CubeYMin}, YMax = {self.CubeYMax}")
+        print(f"     ZMin: {self.CubeZMin}, ZMax = {self.CubeZMax}")
+
     def BuildCube(self, FaceArray, OrderArray):
         '''
         Builds a rectangular box in our region using six Face objects in FaceArray
@@ -83,13 +88,20 @@ class Builder:
         else:
             TopAxis = True
 
+        BlocksCounterX = 0
+        BlocksCounterY = 0
+
         # Building Sides 1 or 6
         if SideNum == 0 or SideNum == 5:
             for x in range(self.CubeXMin, self.CubeXMax + 1):
                 for z in range(self.CubeZMin, self.CubeZMax + 1):
                     YIndex = self.CubeYMax if TopAxis else self.CubeYMin
 
-                    self.Region.setblock(x, YIndex, z, Blocks[x - 1][z - 1])
+                    self.Region.setblock(x, YIndex, z, Blocks[BlocksCounterX][BlocksCounterY])
+                    BlocksCounterY += 1
+                
+                BlocksCounterX += 1
+                BlocksCounterY = 0
 
         # Building Sides 2 or 5
         elif SideNum == 1 or SideNum == 4:
@@ -97,7 +109,11 @@ class Builder:
                 for y in range(self.CubeYMin, self.CubeYMax + 1):
                     ZIndex = self.CubeZMax if TopAxis else self.CubeZMin
 
-                    self.Region.setblock(x, y, ZIndex, Blocks[x - 1][y - 1])
+                    self.Region.setblock(x, y, ZIndex, Blocks[BlocksCounterX][BlocksCounterY])
+                    BlocksCounterY += 1
+                
+                BlocksCounterX += 1
+                BlocksCounterY = 0
 
         # Building Sides 3 or 4
         elif SideNum == 2 or SideNum == 3:
@@ -105,7 +121,11 @@ class Builder:
                 for z in range(self.CubeZMin, self.CubeZMax + 1):
                     XIndex = self.CubeXMax if TopAxis else self.CubeXMin
 
-                    self.Region.setblock(XIndex, y, z, Blocks[y - 1][z - 1])
+                    self.Region.setblock(XIndex, y, z, Blocks[BlocksCounterX][BlocksCounterY])
+                    BlocksCounterY += 1
+                
+                BlocksCounterX += 1
+                BlocksCounterY = 0
 
     def BuildMask(self, FaceArray, OrderArray):
         '''
@@ -139,6 +159,9 @@ class Builder:
         else:
             TopAxis = True
 
+        BlocksCounterX = 0
+        BlocksCounterY = 0
+
         # Determine if the current Side requires padding
         if self.Padding[SideNum] == 0:
             return
@@ -151,7 +174,11 @@ class Builder:
                     for z in range(self.MaskZMin, self.MaskZMax + 1):
                         YIndex = self.MaskYMax if TopAxis else self.MaskYMin
 
-                        self.Region.setblock(x, YIndex, z, Blocks[x - 1][z - 1])
+                        self.Region.setblock(x, YIndex, z, Blocks[BlocksCounterX][BlocksCounterY])
+                        BlocksCounterY += 1
+                
+                    BlocksCounterX += 1
+                    BlocksCounterY = 0
 
             # Building Sides 2 or 5
             elif SideNum == 1 or SideNum == 4:
@@ -159,7 +186,11 @@ class Builder:
                     for y in range(self.MaskYMin, self.MaskYMax + 1):
                         ZIndex = self.MaskZMax if TopAxis else self.MaskZMin
 
-                        self.Region.setblock(x, y, ZIndex, Blocks[x - 1][y - 1])
+                        self.Region.setblock(x, y, ZIndex, Blocks[BlocksCounterX][BlocksCounterY])
+                        BlocksCounterY += 1
+
+                    BlocksCounterX += 1
+                    BlocksCounterY = 0
             
             # Building Sides 3 or 4
             elif SideNum == 2 or SideNum == 3:
@@ -167,4 +198,8 @@ class Builder:
                     for z in range(self.MaskZMin, self.MaskZMax + 1):
                         XIndex = self.MaskXMax if TopAxis else self.MaskXMin
 
-                        self.Region.setblock(XIndex, y, z, Blocks[y - 1][z - 1])
+                        self.Region.setblock(XIndex, y, z, Blocks[BlocksCounterX][BlocksCounterY])
+                        BlocksCounterY += 1
+                    
+                    BlocksCounterX += 1
+                    BlocksCounterY = 0

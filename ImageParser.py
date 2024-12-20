@@ -80,15 +80,15 @@ class ImageParser:
         SizeY = MaxY - MinY
 
         # Allocate OutputArray
-        OutputArray = np.empty((SizeX, SizeY), dtype = tuple)
+        OutputArray = np.empty((SizeX + 1, SizeY + 1), dtype = tuple)
         OutputXCounter = 0
         OutputYCounter = 0
 
         Pixels = self.IMG.load()
 
         # Iterate through region in Image and set RGB values in output
-        for i in range(MinX, MaxX):
-            for j in range(MinY, MaxY):
+        for i in range(MinX, MaxX + 1):
+            for j in range(MinY, MaxY + 1):
                 RBGValues = Pixels[i,j]
                 OutputArray[OutputXCounter][OutputYCounter] = RBGValues
 

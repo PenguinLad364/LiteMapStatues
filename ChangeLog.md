@@ -30,3 +30,10 @@
     - Added "GetBlock" function
     - Added "ConvertToBlocks" function
 - Added docstrings to all current functions and classes
+
+# 12/20/24 Version 0.5
+
+- Updated "Face" Class
+    - Added Rotation and Reflection functionality
+- Fixed Bug in "Builder" Class
+    - 0 Padding caused indexing error in "BuildFace" and "BuildMaskFace" functions
