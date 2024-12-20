@@ -1,6 +1,8 @@
+# Import Libraries
 from litemapy import Schematic, Region, BlockState
 import numpy as np
 
+# Import Classes and Functions
 from Builder import Builder
 from Face import Face
 from utils import CreatePlane

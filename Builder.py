@@ -1,5 +1,35 @@
 class Builder:
+    '''
+    Represents a Builder, responsible for placing blocks inside a given region
+
+    Attributes:
+        Region (Region): Holds the region we are building in
+        Padding (NDArray[int]): Holds an array of values dictating how much padding to add on each side
+
+        CubeXMin (int): Minimum X value in our region for inner skin
+        CubeXMax (int): Maximum X value in our region for inner skin
+        CubeYMin (int): Minimum Y value in our region for inner skin
+        CubeYMax (int): Maximum Y value in our region for inner skin
+        CubeZMin (int): Minimum Z value in our region for inner skin
+        CubeZMax (int): Maximum Z value in our region for inner skin
+
+        MaskXMin (int): Minimum X value in our region for outer skin
+        MaskXMax (int): Maximum X value in our region for outer skin
+        MaskYMin (int): Minimum Y value in our region for outer skin
+        MaskYMax (int): Maximum Y value in our region for outer skin
+        MaskZMin (int): Minimum Z value in our region for outer skin
+        MaskZMax (int): Maximum Z value in our region for outer skin
+    '''
+
     def __init__(self, Region, Padding):
+        '''
+        Initializes Builder object
+
+        Parameters:
+            Region (Region): Region we wish to build in
+            Padding (NDArray[int]): Holds array of values used for padding to our region
+        '''
+
         self.Region = Region
 
         # Parameters for Tracking Padding
@@ -22,12 +52,28 @@ class Builder:
         self.MaskZMax = self.CubeZMax + Padding[4]
 
     def BuildCube(self, FaceArray, OrderArray):
+        '''
+        Builds a rectangular box in our region using six Face objects in FaceArray
+
+        Parameters:
+            FaceArray (NDArray[Face]): Array of Face objects for box construction
+            OrderArray (NDArray[int]): Array of integers determining which sides of the box we build first 
+        '''
+
         # Build each face of the cube
         for i in OrderArray:
             Input = i - 1
             self.BuildFace(FaceArray[Input], Input)
             
     def BuildFace(self, Face, SideNum):
+        '''
+        Builds a specific side of our box from a Face object
+
+        Parameters:
+            Face (Face): Holds the Face object to build this side with
+            SideNum (int): Determines what side of the box to be build
+        '''
+
         # Get the Blocks of the Face
         Blocks = Face.BlockArray
 
@@ -62,12 +108,28 @@ class Builder:
                     self.Region.setblock(XIndex, y, z, Blocks[y - 1][z - 1])
 
     def BuildMask(self, FaceArray, OrderArray):
+        '''
+        Builds along the padded sides in our region using six Face objects in FaceArray
+
+        Parameters:
+            FaceArray (NDArray[Face]): Array of Face objects for box construction
+            OrderArray (NDArray[int]): Array of integers determining which sides of the box we build first 
+        ''' 
+
         # Build each face of the mask
         for i in OrderArray:
             Input = i - 1
             self.BuildMaskFace(FaceArray[Input], Input) 
 
     def BuildMaskFace(self, Face, SideNum):
+        '''
+        Builds a specific side of our padded region from a Face object
+
+        Parameters:
+            Face (Face): Holds the Face object to build this side with
+            SideNum (int): Determines what side of the box to be build
+        '''
+
         # Get blocks of Face
         Blocks = Face.BlockArray
 
