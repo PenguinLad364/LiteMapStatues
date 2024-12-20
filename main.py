@@ -6,10 +6,10 @@ import numpy as np
 from Builder import Builder
 from Face import Face
 from ImageParser import ImageParser
-from utils import CreatePlane, ConvertToBlocks
+from utils import CreatePlane, ConvertToBlocks, ReadSkinRegion
 
 # Define Parser for Skin Image
-SkinParser = ImageParser("Target Skin.png")
+SkinParser = ImageParser("RandomSkin.png")
 
 # Definition of Statue Regions
 Head = Region(0, 24, 4, 10, 9, 10) # 8x8x8 Plus Padding, Loc: (0, 24, 4)
@@ -29,28 +29,22 @@ LLegBuilder = Builder(LLeg, Padding = [0, 1, 1, 1, 0, 0])
 RLegBuilder = Builder(RLeg, Padding = [0, 0, 1, 1, 1, 0])
 
 # Begin Head Construction
-Section1 = ConvertToBlocks(SkinParser.GetPixelSection([16, 0], [23, 0], [16, 7], [23, 7]))
-Section2 = ConvertToBlocks(SkinParser.GetPixelSection([0, 8], [7, 8], [0, 15], [7, 15]))
-Section3 = ConvertToBlocks(SkinParser.GetPixelSection([8, 8], [15, 8], [8, 15], [15, 15]))
-Section4 = ConvertToBlocks(SkinParser.GetPixelSection([24, 8], [31, 8], [24, 15], [31, 15]))
-Section5 = ConvertToBlocks(SkinParser.GetPixelSection([16, 8], [23, 8], [16, 15], [23, 15]))
-Section6 = ConvertToBlocks(SkinParser.GetPixelSection([8, 0], [15, 0], [8, 7], [15, 7]))
+CoordinateArray = [[[16, 0], [23, 0], [16, 7], [23, 7]],
+                   [[0, 8], [7, 8], [0, 15], [7, 15]],
+                   [[8, 8], [15, 8], [8, 15], [15, 15]],
+                   [[24, 8], [31, 8], [24, 15], [31, 15]],
+                   [[16, 8], [23, 8], [16, 15], [23, 15]],
+                   [[8, 0], [15, 0], [8, 7], [15, 7]]]
 
-HeadFace1 = Face(Section1)
-HeadFace1.RotateFace(1)
-print(HeadFace1.BlockArray.shape)
-HeadFace2 = Face(Section2)
-HeadFace2.RotateFace(2)
-HeadFace3 = Face(Section3)
-HeadFace3.RotateFace(1)
-HeadFace4 = Face(Section4)
-HeadFace4.RotateFace(1)
-HeadFace5 = Face(Section5)
-HeadFace5.RotateFace(2)
-HeadFace5.ReflectFace()
-HeadFace6 = Face(Section6)
-HeadFace6.RotateFace(2)
-HeadArray = np.array([HeadFace1, HeadFace2, HeadFace3, HeadFace4, HeadFace5, HeadFace6], dtype = object)
+HeadArray = ReadSkinRegion(SkinParser, CoordinateArray)
+
+HeadArray[0].RotateFace(1)
+HeadArray[1].RotateFace(2)
+HeadArray[2].RotateFace(1)
+HeadArray[3].RotateFace(1)
+HeadArray[4].RotateFace(2)
+HeadArray[4].ReflectFace()
+HeadArray[5].RotateFace(2)
 
 # Create the block states we are going to use
 block1 = BlockState("minecraft:redstone_block")

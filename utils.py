@@ -6,6 +6,7 @@ import os
 
 # Import Classes and Functions
 from dict import BlockMap
+from Face import Face
 
 # Creates a Face with a specified block
 def CreatePlane(SizeX, SizeY, Block):
@@ -147,3 +148,17 @@ def ConvertToBlocks(RGBArray):
             BlockArray[i][j] = BlockState(f"minecraft:{Block}")
 
     return BlockArray
+
+def ReadSkinRegion(Parser, CoordArray):
+    FaceArray = np.empty(6, dtype = object)
+
+    for i in range(6):
+        Coord1 = CoordArray[i][0]
+        Coord2 = CoordArray[i][1]
+        Coord3 = CoordArray[i][2]
+        Coord4 = CoordArray[1][3]
+
+        BlockArray = ConvertToBlocks(Parser.GetPixelSection(Coord1, Coord2, Coord3, Coord4))
+        FaceArray[i] = Face(BlockArray)
+    
+    return np.array(FaceArray, dtype = object)
