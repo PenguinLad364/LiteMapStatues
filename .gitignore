@@ -2,3 +2,4 @@ __pycache__/
 *.litematic
 *.png
 ImageTester.py
+test.py

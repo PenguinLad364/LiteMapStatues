@@ -1,3 +1,5 @@
+import numpy as np
+
 class Face:
     '''
     Represents some face of a box
@@ -31,7 +33,18 @@ class Face:
         self.BlockArray = NewBlockArray
 
     def RotateFace(self, Rotations):
-        pass
+        '''
+        Repositions the values in BlockArray, represents 90 degree counter-clockwise rotations
+
+        Parameters:
+            Rotations (int): Desired number of rotations to make
+        '''
+        
+        self.BlockAray = np.rot90(Rotations, Rotations)
 
     def ReflectFace(self):
-        pass
+        '''
+        Repositions the values in BlockArray, represents a reflection 
+        '''
+        
+        self.BlockArray = np.flip(self.BlockAray, 0)

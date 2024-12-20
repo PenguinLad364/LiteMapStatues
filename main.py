@@ -42,10 +42,7 @@ Face4 = Face(CreatePlane(20, 20, block4))
 Face5 = Face(CreatePlane(20, 20, block5))
 Face6 = Face(CreatePlane(20, 20, block6))
 
-MaskFace = Face(CreatePlane(20, 20, block7))
-
 FaceArray = np.array([Face1, Face2, Face3, Face4, Face5, Face6], dtype = object)
-MaskArray = np.array([MaskFace, MaskFace, MaskFace, MaskFace, MaskFace, MaskFace], dtype = object)
 
 # We build the Front and Back faces (3 and 4) last such that they are the last blocks placed
 # We build the Top and Bottom faces (1 and 6) first such that edges are handled by subsequent faces
@@ -57,13 +54,6 @@ LArmBuilder.BuildCube(FaceArray, OrderArray)
 RArmBuilder.BuildCube(FaceArray, OrderArray)
 LLegBuilder.BuildCube(FaceArray, OrderArray)
 RLegBuilder.BuildCube(FaceArray, OrderArray)
-
-BodyBuilder.BuildMask(MaskArray, OrderArray)
-HeadBuilder.BuildMask(MaskArray, OrderArray)
-LArmBuilder.BuildMask(MaskArray, OrderArray)
-RArmBuilder.BuildMask(MaskArray, OrderArray)
-LLegBuilder.BuildMask(MaskArray, OrderArray)
-RLegBuilder.BuildMask(MaskArray, OrderArray)
 
 regionDict = {"Head":Head,
               "Body":Body,
