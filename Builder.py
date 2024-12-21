@@ -21,13 +21,14 @@ class Builder:
         MaskZMax (int): Maximum Z value in our region for outer skin
     '''
 
-    def __init__(self, Region, Padding):
+    def __init__(self, Region, Padding, debug = False):
         '''
         Initializes Builder object
 
         Parameters:
             Region (Region): Region we wish to build in
             Padding (NDArray[int]): Holds array of values used for padding to our region
+            debug (bool): Used for debugging
         '''
 
         self.Region = Region
@@ -51,10 +52,11 @@ class Builder:
         self.MaskYMax = self.CubeYMax + Padding[5]
         self.MaskZMax = self.CubeZMax + Padding[4]
 
-        print(f"Building Cube:")
-        print(f"     XMin: {self.CubeXMin}, XMax = {self.CubeXMax}")
-        print(f"     YMin: {self.CubeYMin}, YMax = {self.CubeYMax}")
-        print(f"     ZMin: {self.CubeZMin}, ZMax = {self.CubeZMax}")
+        if debug == True:
+            print(f"Building Cube:")
+            print(f"     XMin: {self.CubeXMin}, XMax = {self.CubeXMax}")
+            print(f"     YMin: {self.CubeYMin}, YMax = {self.CubeYMax}")
+            print(f"     ZMin: {self.CubeZMin}, ZMax = {self.CubeZMax}")
 
     def BuildCube(self, FaceArray, OrderArray):
         '''

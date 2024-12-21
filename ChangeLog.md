@@ -31,9 +31,12 @@
     - Added "ConvertToBlocks" function
 - Added docstrings to all current functions and classes
 
-# 12/20/24 Version 0.5
+# 12/20/24 Version 1.0
 
+- Added functionality to read first layer of skin and build schematic
 - Updated "Face" Class
     - Added Rotation and Reflection functionality
+- Updated "utils.py"
+    - Added "ReadSkinRegion" function
 - Fixed Bug in "Builder" Class
     - 0 Padding caused indexing error in "BuildFace" and "BuildMaskFace" functions

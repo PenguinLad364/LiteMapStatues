@@ -150,6 +150,17 @@ def ConvertToBlocks(RGBArray):
     return BlockArray
 
 def ReadSkinRegion(Parser, CoordArray):
+    '''
+    Reads sections of an image and outputs the corresponding blocks within Face objects
+
+    Parameters:
+        Parser (ImageParser): Parser which holds target image
+        CoordArray (List[int]): Lists of coordinates for each of the 6 sides of our region
+    
+    Returns:
+        FaceArray (NDArray[Face]): Array of Face objects
+    '''
+    
     FaceArray = np.empty(6, dtype = object)
 
     for i in range(6):
@@ -161,4 +172,13 @@ def ReadSkinRegion(Parser, CoordArray):
         BlockArray = ConvertToBlocks(Parser.GetPixelSection(Coord1, Coord2, Coord3, Coord4))
         FaceArray[i] = Face(BlockArray)
     
-    return np.array(FaceArray, dtype = object)
+    # Necessary Rotations and Reflections
+    FaceArray[0].RotateFace(1)
+    FaceArray[1].RotateFace(2)
+    FaceArray[2].RotateFace(1)
+    FaceArray[3].RotateFace(1)
+    FaceArray[4].RotateFace(2)
+    FaceArray[4].ReflectFace()
+    FaceArray[5].RotateFace(1)
+    
+    return FaceArray
