@@ -2,10 +2,9 @@
 from litemapy import BlockState
 import numpy as np
 import math
-import os
 
 # Import Classes and Functions
-from dict import BlockMap
+from dict import BlockMap, BlockMap2
 from Face import Face
 
 # Creates a Face with a specified block
@@ -56,28 +55,6 @@ def CreateRandomPlace(SizeX, SizeY, BlockList):
         
     return OutputArray
 
-# Iterates through a folder and returns the average RGB of images in that folder
-def ProcessTextures(Parser, Folder_Path):
-    '''
-    Iterates through a specified folder and prints the average RGB values of all png images in the folder
-
-    Parameters: 
-        Parser (ImageParser): Holds the ImageParser object used for processing
-        Folder_Path (str): Holds the desired folder path
-    '''
-
-    # Iterate through all .png files
-    for Img in os.listdir(Folder_Path):
-        if Img.endswith('.png'):
-
-            # Set Parser to current image
-            ImgPath = os.path.join(Folder_Path, Img)
-            Parser.SetImage(ImgPath)
-
-            # Print average RGB values of image
-            AvgRGB = Parser.GetAverageRGB()
-            print(f"{Img[0:-4]}, {AvgRGB}")
-
 # Calculates the different between two tuples of equal size (as Euclidean Distance)
 def GetDifference(Tup1, Tup2):
     '''
@@ -91,7 +68,7 @@ def GetDifference(Tup1, Tup2):
         Dist (float): Holds euclidean distance of Tup1 and Tup2
     '''
 
-    Dist = math.sqrt(sum((a - b) ** 2 for a, b in zip(Tup1, Tup2)))
+    Dist = math.sqrt(sum(((a - b) ** 2) for a, b in zip(Tup1, Tup2)))
     return Dist
 
 # Function that closest matching block from "BlockMap" given a tuple
@@ -111,15 +88,15 @@ def GetBlock(Input):
     LowestDiff = 10000000000000
 
     # Iterate through all keys in BlockMap
-    for Key in BlockMap:
-        Diff = GetDifference(Input, Key)
+    for Key in BlockMap2:
+        Diff = GetDifference(Input, Key) #(0.3, 0.59, 0.11)
 
         # If conditions are met, set ClosestMatch
         if Diff < LowestDiff:
             LowestDiff = Diff
             ClosestMatch = Key
 
-    BlockString = BlockMap[ClosestMatch]
+    BlockString = BlockMap2[ClosestMatch]
     return BlockString
 
 
@@ -146,6 +123,7 @@ def ConvertToBlocks(RGBArray):
             Block = GetBlock(CurPixel)
 
             BlockArray[i][j] = BlockState(f"minecraft:{Block}")
+            #print(BlockArray[i][j].blockid)
 
     return BlockArray
 
@@ -160,7 +138,7 @@ def ReadSkinRegion(Parser, CoordArray):
     Returns:
         FaceArray (NDArray[Face]): Array of Face objects
     '''
-    
+
     FaceArray = np.empty(6, dtype = object)
 
     for i in range(6):

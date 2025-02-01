@@ -3,3 +3,5 @@ __pycache__/
 *.png
 ImageTester.py
 test.py
+*.ini
+*.txt
