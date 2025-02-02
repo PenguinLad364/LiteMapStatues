@@ -45,12 +45,12 @@ class Builder:
         self.CubeYMax = self.Region.maxy() - Padding[5]
 
         # Parameters for Outer Cube Construction
-        self.MaskXMin = self.Region.minx()
-        self.MaskYMin = self.Region.miny()
-        self.MaskZMin = self.Region.minz()
-        self.MaskXMax = self.CubeXMax + Padding[3]
-        self.MaskYMax = self.CubeYMax + Padding[5]
-        self.MaskZMax = self.CubeZMax + Padding[4]
+        self.MaskXMin = Padding[2]
+        self.MaskYMin = Padding[0]
+        self.MaskZMin = Padding[1]
+        self.MaskXMax = self.CubeXMax + 1
+        self.MaskYMax = self.CubeYMax + 1
+        self.MaskZMax = self.CubeZMax + 1
 
         if debug == True:
             print(f"Building Cube:")
@@ -172,9 +172,9 @@ class Builder:
 
             # Buidling Sides 1 or 6
             if SideNum == 0 or SideNum == 5:
-                for x in range(self.MaskXMin, self.MaskXMax + 1):
-                    for z in range(self.MaskZMin, self.MaskZMax + 1):
-                        YIndex = self.MaskYMax if TopAxis else self.MaskYMin
+                for x in range(self.MaskXMin, self.MaskXMax):
+                    for z in range(self.MaskZMin, self.MaskZMax):
+                        YIndex = self.Region.maxy() if TopAxis else self.Region.miny()
 
                         self.Region.setblock(x, YIndex, z, Blocks[BlocksCounterX][BlocksCounterY])
                         BlocksCounterY += 1
@@ -184,9 +184,9 @@ class Builder:
 
             # Building Sides 2 or 5
             elif SideNum == 1 or SideNum == 4:
-                for x in range(self.MaskXMin, self.MaskXMax + 1):
-                    for y in range(self.MaskYMin, self.MaskYMax + 1):
-                        ZIndex = self.MaskZMax if TopAxis else self.MaskZMin
+                for x in range(self.MaskXMin, self.MaskXMax):
+                    for y in range(self.MaskYMin, self.MaskYMax):
+                        ZIndex = self.Region.maxz() if TopAxis else self.Region.minz()
 
                         self.Region.setblock(x, y, ZIndex, Blocks[BlocksCounterX][BlocksCounterY])
                         BlocksCounterY += 1
@@ -196,9 +196,9 @@ class Builder:
             
             # Building Sides 3 or 4
             elif SideNum == 2 or SideNum == 3:
-                for y in range(self.MaskYMin, self.MaskYMax + 1):
-                    for z in range(self.MaskZMin, self.MaskZMax + 1):
-                        XIndex = self.MaskXMax if TopAxis else self.MaskXMin
+                for y in range(self.MaskYMin, self.MaskYMax):
+                    for z in range(self.MaskZMin, self.MaskZMax):
+                        XIndex = self.Region.maxx() if TopAxis else self.Region.minx()
 
                         self.Region.setblock(XIndex, y, z, Blocks[BlocksCounterX][BlocksCounterY])
                         BlocksCounterY += 1

@@ -40,3 +40,9 @@
     - Added "ReadSkinRegion" function
 - Fixed Bug in "Builder" Class
     - 0 Padding caused indexing error in "BuildFace" and "BuildMaskFace" functions
+
+# 2/1/24 Version 1.1
+
+- Added functionality for Slim models
+- Updated "main.py"
+    - Handles Slim variations for building

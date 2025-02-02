@@ -1,16 +1,15 @@
 # Import Libraries
 from litemapy import Schematic, Region
-
 # Import Classes and Functions
 from Builder import Builder
 from ImageParser import ImageParser
 from utils import ReadSkinRegion
 
 # Define Parser for Skin Image
-SkinParser = ImageParser("TargetSkin.png")
+SkinParser = ImageParser("Reference Template.png")
 
 # Define whether Target Skin is a Slim or Standard model
-Slim = True
+Slim = False
 
 # Definition of Statue Regions
 
@@ -32,23 +31,38 @@ else:
 
 # Builders which are responsible for different portions of the statue.
 # Padding determines which sides need how much padding
-HeadBuilder = Builder(Head, Padding = [0, 1, 1, 1, 1, 1])
+HeadBuilder = Builder(Head, Padding = [0, 1, 1, 1, 1, 1], debug=True)
 BodyBuilder = Builder(Body, Padding = [0, 0, 1, 1, 0, 0])
 LArmBuilder = Builder(LArm, Padding = [1, 1, 1, 1, 0, 1])
 RArmBuilder = Builder(RArm, Padding = [1, 0, 1, 1, 1, 1])
 LLegBuilder = Builder(LLeg, Padding = [0, 1, 1, 1, 0, 0])
 RLegBuilder = Builder(RLeg, Padding = [0, 0, 1, 1, 1, 0])
 
+# We build the Front and Back faces (3 and 4) last such that they are the last blocks placed
+# We build the Top and Bottom faces (1 and 6) first such that edges are handled by subsequent faces
+OrderArray = [1, 6, 2, 5, 4, 3]
+
 # Begin Head Construction
 print("Building Head")
-CoordinateArray = [[[16, 0], [23, 0], [16, 7], [23, 7]],
+BaseCoordinateArray = [[[16, 0], [23, 0], [16, 7], [23, 7]],
                    [[0, 8], [7, 8], [0, 15], [7, 15]],
                    [[8, 8], [15, 8], [8, 15], [15, 15]],
                    [[24, 8], [31, 8], [24, 15], [31, 15]],
                    [[16, 8], [23, 8], [16, 15], [23, 15]],
                    [[8, 0], [15, 0], [8, 7], [15, 7]]]
 
-HeadArray = ReadSkinRegion(SkinParser, CoordinateArray)
+MaskCoordinateArray = [[[48, 0], [55, 0], [48, 7], [55, 7]],
+                   [[32, 8], [39, 8], [32, 15], [39, 15]],
+                   [[40, 8], [47, 8], [40, 15], [47, 15]],
+                   [[56, 8], [63, 8], [56, 15], [63, 15]],
+                   [[48, 8], [55, 8], [48, 15], [55, 15]],
+                   [[40, 0], [47, 0], [40, 7], [47, 7]]]
+
+HeadArray = ReadSkinRegion(SkinParser, BaseCoordinateArray)
+HeadMaskArray = ReadSkinRegion(SkinParser, MaskCoordinateArray)
+
+HeadBuilder.BuildCube(HeadArray, OrderArray)
+HeadBuilder.BuildMask(HeadMaskArray, OrderArray)
 
 # Begin Body Construction
 print("Building Body")
@@ -59,7 +73,18 @@ CoordinateArray = [[[28, 16], [35, 16], [28, 19], [35, 19]],
                    [[28, 20], [31, 20], [28, 31], [31, 31]],
                    [[20, 16], [27, 16], [20, 19], [27, 19]]]
 
+MaskCoordinateArray = [[[28, 32], [35, 32], [28, 35], [35, 35]],
+                   [[16, 36], [19, 36], [16, 47], [19, 47]],
+                   [[20, 36], [27, 36], [20, 47], [27, 47]],
+                   [[32, 36], [39, 36], [32, 47], [39, 47]],
+                   [[28, 36], [31, 36], [28, 47], [31, 47]],
+                   [[20, 32], [27, 32], [20, 35], [27, 35]]]
+
 BodyArray = ReadSkinRegion(SkinParser, CoordinateArray)
+BodyMaskArray = ReadSkinRegion(SkinParser, MaskCoordinateArray)
+
+BodyBuilder.BuildCube(BodyArray, OrderArray)
+BodyBuilder.BuildMask(BodyMaskArray, OrderArray)
 
 # Begin Left Leg Construction
 print("Building LLeg")
@@ -70,7 +95,18 @@ CoordinateArray = [[[8, 16], [11, 16], [8, 19], [11, 19]],
                    [[8, 20], [11, 20], [8, 31], [11, 31]],
                    [[4, 16], [7, 16], [4, 19], [7, 19]]]
 
+MaskCoordinateArray = [[[8, 32], [11, 32], [8, 35], [11, 35]],
+                   [[0, 36], [3, 36], [0, 47], [3, 47]],
+                   [[4, 36], [7, 36], [4, 47], [7, 47]],
+                   [[12, 36], [15, 36], [12, 47], [15, 47]],
+                   [[8, 36], [11, 36], [8, 47], [11, 47]],
+                   [[4, 32], [7, 32], [4, 35], [7, 35]]]
+
 LLegArray = ReadSkinRegion(SkinParser, CoordinateArray)
+LLegMaskArray = ReadSkinRegion(SkinParser, MaskCoordinateArray)
+
+LLegBuilder.BuildCube(LLegArray, OrderArray)
+LLegBuilder.BuildMask(LLegMaskArray, OrderArray)
 
 # Begin Right Leg Construction
 print("Building RLeg")
@@ -81,7 +117,18 @@ CoordinateArray = [[[24, 48], [27, 48], [24, 51], [27, 51]],
                    [[24, 52], [27, 52], [24, 63], [27, 63]],
                    [[20, 48], [23, 48], [20, 51], [23, 51]]]
 
+MaskCoordinateArray = [[[8, 48], [11, 48], [8, 51], [11, 51]],
+                        [[0, 52], [3, 52], [0, 63], [3, 63]],
+                        [[4, 52], [7, 52], [4, 63], [7, 63]],
+                        [[12, 52], [15, 52], [12, 63], [15, 63]],
+                        [[8, 52], [11, 52], [8, 63], [11, 63]],
+                        [[4, 48], [7, 48], [4, 51], [7, 51]]]
+
 RLegArray = ReadSkinRegion(SkinParser, CoordinateArray)
+RLegMaskArray = ReadSkinRegion(SkinParser, MaskCoordinateArray)
+
+RLegBuilder.BuildCube(RLegArray, OrderArray)
+RLegBuilder.BuildMask(LLegMaskArray, OrderArray)
 
 # Construct arms based on whether we have a Slim or Standard skin
 if Slim == False:
@@ -93,8 +140,16 @@ if Slim == False:
                     [[52, 20], [55, 20], [52, 31], [55, 31]],
                     [[48, 20], [51, 20], [48, 31], [51, 31]],
                     [[44, 16], [47, 16], [44, 19], [47, 19]]]
+    
+    MaskCoordinateArray = [[[48, 32], [51, 32], [48, 35], [51, 35]],
+                            [[40, 36], [43, 36], [40, 47], [43, 47]],
+                            [[44, 36], [47, 36], [44, 47], [47, 47]],
+                            [[52, 36], [55, 36], [52, 47], [55, 47]],
+                            [[48, 36], [51, 36], [48, 47], [51, 47]],
+                            [[44, 32], [47, 32], [44, 35], [47, 35]]]
 
     LArmArray = ReadSkinRegion(SkinParser, CoordinateArray)
+    LArmMaskArray = ReadSkinRegion(SkinParser, MaskCoordinateArray)
 
     # Begin Right Arm Construction
     print("Building RArm")
@@ -104,8 +159,16 @@ if Slim == False:
                     [[44, 52], [47, 52], [44, 63], [47, 63]],
                     [[40, 52], [43, 52], [40, 63], [43, 63]],
                     [[36, 48], [39, 48], [36, 51], [39, 51]]]
+    
+    MaskCoordinateArray = [[[56, 48], [59, 48], [56, 51], [59, 51]],
+                        [[48, 52], [51, 52], [48, 63], [51, 63]],
+                        [[52, 52], [55, 52], [52, 63], [55, 63]],
+                        [[60, 52], [63, 52], [60, 63], [63, 63]],
+                        [[56, 52], [59, 52], [56, 63], [59, 63]],
+                        [[52, 48], [55, 48], [52, 51], [55, 51]]]
 
     RArmArray = ReadSkinRegion(SkinParser, CoordinateArray)
+    RArmMaskArray = ReadSkinRegion(SkinParser, MaskCoordinateArray)
 
 else:
     # Begin Left Arm Construction
@@ -117,7 +180,15 @@ else:
                     [[47, 20], [50, 20], [47, 31], [50, 31]],
                     [[44, 16], [46, 16], [44, 19], [46, 19]]]
 
+    MaskCoordinateArray = [[[47, 32], [49, 32], [47, 35], [49, 35]],
+                            [[40, 36], [43, 36], [40, 47], [43, 47]],
+                            [[44, 36], [46, 36], [44, 47], [46, 47]],
+                            [[51, 36], [53, 36], [51, 47], [53, 47]],
+                            [[47, 36], [50, 36], [47, 47], [50, 47]],
+                            [[44, 32], [46, 32], [44, 35], [46, 35]]]
+
     LArmArray = ReadSkinRegion(SkinParser, CoordinateArray)
+    LArmMaskArray = ReadSkinRegion(SkinParser, MaskCoordinateArray)
 
     # Begin Right Arm Construction
     print("Building RArm")
@@ -127,19 +198,23 @@ else:
                     [[43, 52], [45, 52], [43, 63], [45, 63]],
                     [[39, 52], [42, 52], [39, 63], [42, 63]],
                     [[36, 48], [38, 48], [36, 51], [38, 51]]]
+    
+    MaskCoordinateArray = [[[55, 48], [57, 48], [55, 51], [57, 51]],
+                        [[48, 52], [51, 52], [48, 63], [51, 63]],
+                        [[52, 52], [54, 52], [52, 63], [54, 63]],
+                        [[59, 52], [61, 52], [59, 63], [61, 63]],
+                        [[55, 52], [58, 52], [55, 63], [58, 63]],
+                        [[52, 48], [54, 48], [52, 51], [54, 51]]]
 
     RArmArray = ReadSkinRegion(SkinParser, CoordinateArray)
+    RArmMaskArray = ReadSkinRegion(SkinParser, MaskCoordinateArray)
 
-# We build the Front and Back faces (3 and 4) last such that they are the last blocks placed
-# We build the Top and Bottom faces (1 and 6) first such that edges are handled by subsequent faces
-OrderArray = [1, 6, 2, 5, 4, 3]
 
-HeadBuilder.BuildCube(HeadArray, OrderArray)
-BodyBuilder.BuildCube(BodyArray, OrderArray)
 LArmBuilder.BuildCube(LArmArray, OrderArray)
 RArmBuilder.BuildCube(RArmArray, OrderArray)
-LLegBuilder.BuildCube(LLegArray, OrderArray)
-RLegBuilder.BuildCube(RLegArray, OrderArray)
+
+LArmBuilder.BuildMask(LArmMaskArray, OrderArray)
+RArmBuilder.BuildMask(RArmMaskArray, OrderArray)
 
 regionDict = {"Head":Head,
               "Body":Body,
