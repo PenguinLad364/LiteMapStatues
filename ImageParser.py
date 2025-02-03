@@ -30,7 +30,7 @@ class ImageParser:
         '''
 
         InitImage = Image.open(path)
-        self.IMG = InitImage.convert('RGB')
+        self.IMG = InitImage.convert('RGBA')
 
         self.SizeX, self.SizeY = self.IMG.size
 

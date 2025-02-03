@@ -83,13 +83,17 @@ def GetBlock(Input):
         BlockString (str): Holds the value for closest matching key in BlockMap dictionary
     '''
 
+    # If Alpha Channel < 255, transparent pixel
+    if Input[3] < 255:
+        return "air"
+    
     # Initlalze variables
     ClosestMatch = (256, 256, 256)
     LowestDiff = 10000000000000
 
     # Iterate through all keys in BlockMap
     for Key in BlockMap2:
-        Diff = GetDifference(Input, Key) #(0.3, 0.59, 0.11)
+        Diff = GetDifference(Input, Key)
 
         # If conditions are met, set ClosestMatch
         if Diff < LowestDiff:
@@ -123,7 +127,6 @@ def ConvertToBlocks(RGBArray):
             Block = GetBlock(CurPixel)
 
             BlockArray[i][j] = BlockState(f"minecraft:{Block}")
-            #print(BlockArray[i][j].blockid)
 
     return BlockArray
 

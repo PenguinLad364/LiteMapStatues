@@ -46,3 +46,11 @@
 - Added functionality for Slim models
 - Updated "main.py"
     - Handles Slim variations for building
+
+# 2/2/24 Version 1.2
+- Added functionality to read second kayer of skin and build schematic
+    - Added "Second_Layer" variable in "main.py" to toggle mask building
+- Updated "ImageParser" Class
+    - Now reads image segments as RGBA, to account for transparancy
+- Updated "Builder" Class
+    - Reworked Mask minimum and maximum values for building and reading
